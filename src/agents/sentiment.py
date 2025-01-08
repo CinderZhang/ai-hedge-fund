@@ -30,16 +30,20 @@ def sentiment_agent(state: AgentState):
     # Determine overall signal
     bullish_signals = signals.count("bullish")
     bearish_signals = signals.count("bearish")
-    if bullish_signals > bearish_signals:
-        overall_signal = "bullish"
-    elif bearish_signals > bullish_signals:
-        overall_signal = "bearish"
-    else:
-        overall_signal = "neutral"
-
-    # Calculate confidence level based on the proportion of indicators agreeing
     total_signals = len(signals)
-    confidence = round(max(bullish_signals, bearish_signals) / total_signals, 2) * 100
+    
+    if total_signals == 0:
+        overall_signal = "neutral"
+        confidence = 0
+    else:
+        if bullish_signals > bearish_signals:
+            overall_signal = "bullish"
+        elif bearish_signals > bullish_signals:
+            overall_signal = "bearish"
+        else:
+            overall_signal = "neutral"
+        confidence = round(max(bullish_signals, bearish_signals) / total_signals, 2) * 100
+
     reasoning = (
         f"Bullish signals: {bullish_signals}, Bearish signals: {bearish_signals}"
     )
